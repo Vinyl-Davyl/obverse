@@ -20,3 +20,4 @@ export class ModelExceptionFilter implements ExceptionFilter {
     console.log(`An Error Occured in ${request.url}`, exception);
   }
 }
+

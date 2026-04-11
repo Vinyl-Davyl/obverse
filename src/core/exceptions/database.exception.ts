@@ -15,3 +15,4 @@ export class DatabaseException extends HttpException {
     );
   }
 }
+

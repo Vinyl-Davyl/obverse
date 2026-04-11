@@ -138,3 +138,4 @@ export class PaymentLinkResponseDto {
   })
   previewImageUrl?: string;
 }
+

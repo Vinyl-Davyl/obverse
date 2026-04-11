@@ -17,3 +17,4 @@ export class PaymentlinksRepository extends CoreRepository<PaymentLinkDocument> 
     super(paymentlink);
   }
 }
+

@@ -273,3 +273,4 @@ export class BalanceResponseDto {
   })
   lastUpdated: Date;
 }
+

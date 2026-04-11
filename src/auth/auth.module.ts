@@ -37,3 +37,4 @@ import { Merchant, MerchantSchema } from '../merchants/schema/merchant.schema';
   exports: [DashboardAuthService, JwtModule, PassportModule],
 })
 export class AuthModule {}
+

@@ -182,3 +182,4 @@ SOLANA_RPC_URL=https://api.mainnet-beta.solana.com
 ✅ Ready to use!
 
 Users can now check their wallet balances anytime with a simple `/balance` command! 💰
+

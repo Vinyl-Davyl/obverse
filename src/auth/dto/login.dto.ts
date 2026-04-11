@@ -18,3 +18,4 @@ export class LoginDto {
   @IsNotEmpty()
   password: string; // Temporary password
 }
+

@@ -53,3 +53,4 @@ export interface SignTransactionParams {
 export interface SignTransactionResult {
   signedTransaction: string;
 }
+

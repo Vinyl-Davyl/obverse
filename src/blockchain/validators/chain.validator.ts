@@ -101,3 +101,4 @@ export class ChainValidator {
     this.validateMinimumAmount(data.chain, data.token, data.amount);
   }
 }
+

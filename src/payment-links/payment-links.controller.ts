@@ -561,3 +561,4 @@ export class PaymentLinksController {
     return merchant?.walletAddress;
   }
 }
+

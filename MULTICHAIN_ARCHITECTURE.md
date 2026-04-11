@@ -64,3 +64,4 @@ Business logic should avoid hardcoded chain branching beyond protocol family rou
 - Base chain id: `8453`
 - Native token: `ETH`
 - Stablecoin token: `USDC` (official Circle contract on Base)
+

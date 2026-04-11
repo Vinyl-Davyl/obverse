@@ -222,3 +222,4 @@ export function getTransactionExplorerUrl(
   const explorerBase = (configuredBase || fallbackBase).replace(/\/$/, '');
   return `${explorerBase}/${txHash}`;
 }
+

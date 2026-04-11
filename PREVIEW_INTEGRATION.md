@@ -214,3 +214,4 @@ For reliable OG/Twitter previews, serve SSR/prerendered HTML or a backend HTML s
 - Rendering errors return branded PNG fallback images by default.
 - No PII/private notes are included in preview template mapping.
 - Missing share entities return `404` HTML pages with fallback OG tags/images.
+

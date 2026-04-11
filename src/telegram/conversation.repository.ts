@@ -17,3 +17,4 @@ export class ConversationRepository extends CoreRepository<ConversationStateDocu
     super(conversation);
   }
 }
+

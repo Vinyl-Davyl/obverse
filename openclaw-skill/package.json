@@ -35,3 +35,4 @@
     "test": "bash test/test-skill.sh"
   }
 }
+

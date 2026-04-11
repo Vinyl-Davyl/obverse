@@ -120,3 +120,4 @@ export class CreatePaymentDto {
   @IsOptional()
   confirmations?: number; // Number of confirmations (optional)
 }
+

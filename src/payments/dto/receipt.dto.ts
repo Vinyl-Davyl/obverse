@@ -103,3 +103,4 @@ export class PaymentReceiptDto {
   })
   previewImageUrl?: string;
 }
+

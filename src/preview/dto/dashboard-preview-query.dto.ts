@@ -20,3 +20,4 @@ export class DashboardPreviewQueryDto {
   @IsString()
   endDate?: string;
 }
+

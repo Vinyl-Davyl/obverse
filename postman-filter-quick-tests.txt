@@ -116,3 +116,4 @@ Authorization: Bearer YOUR_ACCESS_TOKEN
 # Example:
 # GET https://api.yourdomain.com/dashboard/payments?token=USDC
 # Authorization: Bearer YOUR_ACCESS_TOKEN
+

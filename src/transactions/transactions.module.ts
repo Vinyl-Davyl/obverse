@@ -15,3 +15,4 @@ import { Transaction, TransactionSchema } from './schemas/transaction.schema';
   exports: [TransactionsService],
 })
 export class TransactionsModule {}
+

@@ -527,3 +527,4 @@ export class TelegramGateway implements OnModuleInit, OnModuleDestroy {
     console.log('Telegram bot stopped');
   }
 }
+

@@ -355,3 +355,4 @@ After successful testing, you can:
 - Check the [telegram.gateway.ts](src/telegram/telegram.gateway.ts) for bot command handling
 - Review [dashboard-auth.service.ts](src/auth/dashboard-auth.service.ts) for authentication logic
 - See [dashboard.service.ts](src/dashboard/dashboard.service.ts) for business logic
+

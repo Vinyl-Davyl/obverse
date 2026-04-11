@@ -56,3 +56,4 @@ export interface DashboardPreviewData {
   currency?: string;
   updatedAt?: Date;
 }
+

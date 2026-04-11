@@ -139,3 +139,4 @@ TransactionSchema.index({ merchantId: 1, type: 1, createdAt: -1 });
 TransactionSchema.index({ merchantId: 1, chain: 1, createdAt: -1 });
 TransactionSchema.index({ merchantId: 1, status: 1, createdAt: -1 });
 TransactionSchema.index({ txSignature: 1, chain: 1 }, { unique: true });
+

@@ -33,3 +33,4 @@ export const ConversationStateSchema =
 
 // Add TTL index to auto-delete expired conversations
 ConversationStateSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 });
+

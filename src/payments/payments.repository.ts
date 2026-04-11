@@ -14,3 +14,4 @@ export class PaymentRepository extends CoreRepository<PaymentDocument> {
     super(payment);
   }
 }
+

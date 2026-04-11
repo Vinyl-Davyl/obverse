@@ -5,3 +5,4 @@ export class ModelNotFound extends HttpException {
     super(message ? message : 'Resource Not Found', HttpStatus.NOT_FOUND);
   }
 }
+

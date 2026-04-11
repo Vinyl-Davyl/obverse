@@ -10,3 +10,4 @@ services:
         value: production
     # Add your other environment variables in Render dashboard
     # The start script already includes memory limits
+

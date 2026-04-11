@@ -61,3 +61,4 @@ export class PaymentLink {
 }
 
 export const PaymentLinkSchema = SchemaFactory.createForClass(PaymentLink);
+

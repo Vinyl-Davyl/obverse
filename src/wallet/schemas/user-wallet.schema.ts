@@ -34,3 +34,4 @@ export const UserWalletSchema = SchemaFactory.createForClass(UserWalletModel);
 
 // Add compound indexes if needed
 UserWalletSchema.index({ odaUserId: 1, solanaAddress: 1 });
+

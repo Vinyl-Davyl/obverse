@@ -450,3 +450,4 @@ The payment creation flow is now complete:
 ✅ **Duplicate prevention** via transaction signature check
 
 **Default behavior:** Payments are **"confirmed"** immediately since frontend only calls this endpoint after successful blockchain transaction. No polling needed!
+

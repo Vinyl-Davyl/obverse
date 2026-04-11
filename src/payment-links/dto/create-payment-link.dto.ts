@@ -121,3 +121,4 @@ export class CreatePaymentLinkDto {
   @IsOptional()
   recipientWalletAddress?: string;
 }
+

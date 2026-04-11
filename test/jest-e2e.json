@@ -11,3 +11,4 @@
     "^nanoid$": "<rootDir>/mocks/nanoid.ts"
   }
 }
+

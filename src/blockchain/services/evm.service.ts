@@ -445,3 +445,4 @@ export class EvmService {
     return ethers.formatUnits(value, decimals);
   }
 }
+

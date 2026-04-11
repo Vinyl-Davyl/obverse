@@ -37,3 +37,4 @@ export const ApiKeySchema = SchemaFactory.createForClass(ApiKey);
 ApiKeySchema.index({ key: 1, isActive: 1 }); // Fast lookup for auth
 ApiKeySchema.index({ merchantId: 1, isActive: 1 }); // List keys for merchant
 ApiKeySchema.index({ expiresAt: 1 }); // Clean up expired keys
+

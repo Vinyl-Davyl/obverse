@@ -99,3 +99,4 @@ export class WalletController {
     return this.balanceService.getBalance(userId, chain || 'solana');
   }
 }
+

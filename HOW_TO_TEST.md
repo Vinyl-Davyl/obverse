@@ -257,3 +257,4 @@ Edit `test-endpoints.sh` and comment out sections you don't want to test.
 - **Full Testing Guide:** [TESTING.md](TESTING.md)
 - **Quick Start:** [QUICK_START.md](QUICK_START.md)
 - **Endpoint Details:** [NEW_ENDPOINT_SUMMARY.md](NEW_ENDPOINT_SUMMARY.md)
+

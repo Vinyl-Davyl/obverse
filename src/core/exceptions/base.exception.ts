@@ -15,3 +15,4 @@ export class BaseException extends HttpException {
     this.statusCode = statusCode;
   }
 }
+

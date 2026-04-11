@@ -17,3 +17,4 @@ import { WalletModule } from 'src/wallet/wallet.module';
   exports: [MerchantService, MerchantRepository],
 })
 export class MerchantsModule {}
+

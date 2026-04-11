@@ -182,3 +182,4 @@ This endpoint is useful for:
 - Uses MongoDB indexing on `paymentLinkId` field
 - Populates payment link data (single JOIN operation)
 - No pagination (consider adding if links receive many payments)
+

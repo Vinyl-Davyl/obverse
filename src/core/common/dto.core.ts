@@ -30,3 +30,4 @@ export class CoreSearchFilterDatePaginationDto {
   @Transform(({ value }: TransformFnParams) => value?.trim())
   endDate: string;
 }
+

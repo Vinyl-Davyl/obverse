@@ -46,3 +46,4 @@ import { BlockchainModule } from '../blockchain/blockchain.module';
   exports: [WalletService, WALLET_REPOSITORY],
 })
 export class WalletModule {}
+

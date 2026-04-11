@@ -54,3 +54,4 @@ export function buildShareHtml(data: ShareHtmlData): string {
 </body>
 </html>`;
 }
+

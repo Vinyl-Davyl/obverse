@@ -37,3 +37,4 @@ export interface IWalletRepository {
 }
 
 export const WALLET_REPOSITORY = Symbol('WALLET_REPOSITORY');
+

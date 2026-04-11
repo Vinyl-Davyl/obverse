@@ -121,3 +121,4 @@ describe('Share Endpoints (e2e)', () => {
         expect(html).toContain('The requested payment resource was not found.');
     });
 });
+

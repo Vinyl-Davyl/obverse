@@ -221,3 +221,4 @@ export class BalanceHandler {
     return getChainConfig(chain).nativeCurrency.symbol;
   }
 }
+

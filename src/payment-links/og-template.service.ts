@@ -196,3 +196,4 @@ export class OGTemplateService {
     return colorMap[chain.toLowerCase()] || '#4ecca3';
   }
 }
+

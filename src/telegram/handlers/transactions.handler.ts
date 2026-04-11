@@ -272,3 +272,4 @@ export class TransactionsHandler {
     return labelMap[type] || type;
   }
 }
+

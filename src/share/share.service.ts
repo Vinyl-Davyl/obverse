@@ -132,3 +132,4 @@ export class ShareService {
         return this.getAppBaseUrl(req);
     }
 }
+

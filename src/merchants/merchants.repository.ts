@@ -14,3 +14,4 @@ export class MerchantRepository extends CoreRepository<MerchantDocument> {
     super(merchantModel);
   }
 }
+

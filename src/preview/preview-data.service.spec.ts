@@ -56,3 +56,4 @@ describe('PreviewDataService', () => {
     expect(mapped.txHashTruncated.length).toBeLessThan(66);
   });
 });
+

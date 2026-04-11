@@ -74,3 +74,4 @@ export class MongoWalletRepository implements IWalletRepository {
     };
   }
 }
+

@@ -53,3 +53,4 @@ DashboardSessionSchema.index({
   paymentLinkId: 1,
   expiresAt: -1,
 });
+

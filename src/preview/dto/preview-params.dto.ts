@@ -15,3 +15,4 @@ export class DashboardPreviewParamsDto {
   @IsMongoId()
   dashboardId: string;
 }
+

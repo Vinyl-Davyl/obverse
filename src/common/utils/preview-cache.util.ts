@@ -36,3 +36,4 @@ export function truncateHash(hash: string, visible = 6): string {
   }
   return `${hash.slice(0, visible)}…${hash.slice(-visible)}`;
 }
+
