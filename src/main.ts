@@ -48,6 +48,7 @@ async function bootstrap() {
       .addTag('payments', 'Payment processing endpoints')
       .addTag('transactions', 'Transaction management endpoints')
       .addTag('wallet', 'Wallet and balance endpoints')
+      .addTag('whatsapp', 'WhatsApp webhook endpoints')
       .addBearerAuth(
         {
           type: 'http',

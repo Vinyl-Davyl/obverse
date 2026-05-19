@@ -19,6 +19,7 @@ import { PaymentLinksModule } from 'src/payment-links/payment-links.module';
 import { PaymentsModule } from 'src/payments/payments.module';
 import { TransactionsModule } from 'src/transactions/transactions.module';
 import { AuthModule } from 'src/auth/auth.module';
+import { MessagingCoreModule } from 'src/messaging-core/messaging-core.module';
 import { ConversationManager } from './conversation/conversation.manager';
 import {
   ConversationState,
@@ -33,6 +34,7 @@ import { ConversationRepository } from './conversation.repository';
     PaymentsModule,
     TransactionsModule,
     AuthModule,
+    MessagingCoreModule,
     MongooseModule.forFeature([
       { name: ConversationState.name, schema: ConversationStateSchema },
     ]),

@@ -197,6 +197,98 @@ export class MerchantService {
     return merchant;
   }
 
+  async findByWhatsappId(
+    whatsappId: string,
+  ): Promise<MerchantDocument | null> {
+    const merchant = await this.merchantModel.findOne({ whatsappId }).exec();
+    if (!merchant) {
+      return null;
+    }
+
+    await this.syncMerchantWalletsWithTurnkeyWallet(
+      merchant,
+      this.getWhatsappWalletUserId(whatsappId),
+    );
+    return merchant;
+  }
+
+  async getOrCreateWhatsappMerchant(data: {
+    whatsappId: string;
+    displayName?: string;
+  }): Promise<{ merchant: MerchantDocument; wallet: any; isNew: boolean }> {
+    const whatsappId = data.whatsappId?.trim();
+    if (!whatsappId) {
+      throw new NotFoundException('WhatsApp ID is required');
+    }
+
+    const walletUserId = this.getWhatsappWalletUserId(whatsappId);
+
+    const existing = await this.findByWhatsappId(whatsappId);
+    if (existing) {
+      const wallet = await this.walletService.getOrCreateWallet({
+        odaUserId: walletUserId,
+        userName: data.displayName || existing.username || 'WhatsApp User',
+      });
+
+      return {
+        merchant: existing,
+        wallet,
+        isNew: false,
+      };
+    }
+
+    const walletResponse = await this.walletService.getOrCreateWallet({
+      odaUserId: walletUserId,
+      userName: data.displayName || `wa-${whatsappId}`,
+    });
+
+    const walletDoc = await this.walletService.getWalletDocument(walletUserId);
+
+    const wallets = [
+      {
+        address: walletResponse.solanaAddress,
+        chain: 'solana',
+        isActive: true,
+        label: 'Turnkey Wallet',
+      },
+    ];
+
+    if (walletResponse.ethereumAddress) {
+      wallets.push({
+        address: walletResponse.ethereumAddress,
+        chain: 'monad',
+        isActive: true,
+        label: 'Turnkey Wallet',
+      });
+      wallets.push({
+        address: walletResponse.ethereumAddress,
+        chain: 'base',
+        isActive: true,
+        label: 'Turnkey Wallet',
+      });
+    }
+
+    const merchant = new this.merchantModel({
+      whatsappId,
+      username: data.displayName || `wa-${whatsappId}`,
+      turnkeyWalletId: walletDoc?.id,
+      walletAddress: walletResponse.solanaAddress,
+      wallets,
+    });
+
+    await merchant.save();
+
+    this.logger.log(
+      `Created WhatsApp merchant ${whatsappId} with wallet ${walletResponse.solanaAddress}`,
+    );
+
+    return {
+      merchant,
+      wallet: walletResponse,
+      isNew: true,
+    };
+  }
+
   async findById(
     id: string | Types.ObjectId,
   ): Promise<MerchantDocument | null> {
@@ -674,5 +766,9 @@ export class MerchantService {
     if (changed) {
       await merchant.save();
     }
+  }
+
+  private getWhatsappWalletUserId(whatsappId: string): string {
+    return `whatsapp:${whatsappId}`;
   }
 }

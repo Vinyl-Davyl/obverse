@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { InvoiceApplicationService } from 'src/messaging-core/invoice-application.service';
 import { MerchantService } from 'src/merchants/merchants.service';
 import { PaymentLinksService } from 'src/payment-links/payment-links.service';
 import { PaymentsService } from 'src/payments/payments.service';
@@ -6,6 +7,7 @@ import { PaymentsService } from 'src/payments/payments.service';
 @Injectable()
 export class ViewLinkHandler {
   constructor(
+    private invoiceApplicationService: InvoiceApplicationService,
     private merchantsService: MerchantService,
     private paymentLinksService: PaymentLinksService,
     private paymentsService: PaymentsService,
@@ -51,32 +53,18 @@ export class ViewLinkHandler {
 
   private async showLinkDetails(ctx: any, linkId: string, merchantId: string) {
     try {
-      const link = await this.paymentLinksService.findByLinkId(linkId);
+      const details = await this.invoiceApplicationService.getMerchantInvoiceDetails(
+        merchantId,
+        linkId,
+      );
 
-      // Verify ownership
-      if (link.merchantId.toString() !== merchantId) {
+      if (!details) {
         await ctx.reply(`❌ You don't have access to this payment link.`);
         return;
       }
 
-      const payments = await this.paymentsService.findByPaymentLinkId(
-        link._id.toString(),
-      );
-
-      const confirmedPayments = payments.filter(
-        (p) => p.status === 'confirmed',
-      );
-      const totalAmount = confirmedPayments.reduce(
-        (sum, p) => sum + p.amount,
-        0,
-      );
-
-      const paymentBaseUrl = process.env.PAYMENT_URL
-        ? process.env.PAYMENT_URL.replace(/\/$/, '')
-        : process.env.APP_URL
-          ? `${process.env.APP_URL.replace(/\/$/, '')}/pay`
-          : 'https://pay.obverse.app';
-      const paymentUrl = `${paymentBaseUrl}/${link.linkId}`;
+      const { link, payments, confirmedPayments, totalAmount, paymentUrl } =
+        details;
       const status = link.isActive ? '✅ Active' : '❌ Inactive';
       const type = link.isReusable ? '🔄 Reusable' : '1️⃣ One-time';
 

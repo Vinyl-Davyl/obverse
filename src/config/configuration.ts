@@ -9,6 +9,11 @@ export default () => ({
   PARA_SECRET_KEY: process.env.PARA_SECRET_KEY,
   APP_URL: process.env.APP_URL || 'https://www.obverse.cc',
   DASHBOARD_URL: process.env.DASHBOARD_URL,
+  whatsapp: {
+    verifyToken: process.env.WHATSAPP_VERIFY_TOKEN,
+    phoneNumberId: process.env.WHATSAPP_PHONE_NUMBER_ID,
+    kapsoApiKey: process.env.KAPSO_API_KEY,
+  },
   preview: {
     baseUrl: process.env.PREVIEW_BASE_URL || process.env.APP_URL,
     signingSecret: process.env.PREVIEW_SIGNING_SECRET,

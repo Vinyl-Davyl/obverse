@@ -23,6 +23,9 @@ export class Merchant {
   telegramId?: string;
 
   @Prop({ unique: true, sparse: true })
+  whatsappId?: string;
+
+  @Prop({ unique: true, sparse: true })
   farcasterFid?: string;
 
   @Prop()
