@@ -7,6 +7,8 @@ import { getChainConfig } from '../../blockchain/config/chains.config';
 export class BalanceHandler {
   private readonly logger = new Logger(BalanceHandler.name);
   private solanaConnection: Connection;
+  private readonly USDC_MINT_SOLANA =
+    'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v';
 
   constructor(private merchantsService: MerchantService) {
     // Initialize Solana connection (you can make this configurable)
@@ -28,7 +30,7 @@ export class BalanceHandler {
     if (!merchant.wallets || merchant.wallets.length === 0) {
       await ctx.reply(
         `⚠️ No wallets configured yet.\n\n` +
-          `Please add a wallet using /wallet first.`,
+        `Please add a wallet using /wallet first.`,
       );
       return;
     }
@@ -50,10 +52,11 @@ export class BalanceHandler {
           if (wallet.chain === 'solana') {
             const balance = await this.getSolanaBalance(wallet.address);
             message += `💵 Balance: ${balance.sol.toFixed(4)} SOL\n`;
-
-            // You can add USDC balance here if needed
-            // const usdcBalance = await this.getSolanaTokenBalance(wallet.address, USDC_MINT);
-            // message += `💵 USDC: ${usdcBalance.toFixed(2)}\n`;
+            const usdcBalance = await this.getSolanaTokenBalance(
+              wallet.address,
+              this.USDC_MINT_SOLANA,
+            );
+            message += `💵 USDC: ${usdcBalance.toFixed(2)}\n`;
           } else {
             // EVM chains
             const balance = await this.getEVMBalance(
@@ -99,31 +102,33 @@ export class BalanceHandler {
     }
   }
 
-  // Optional: Get SPL token balance (e.g., USDC on Solana)
-  // private async getSolanaTokenBalance(walletAddress: string, tokenMint: string): Promise<number> {
-  //   try {
-  //     const walletPubkey = new PublicKey(walletAddress);
-  //     const mintPubkey = new PublicKey(tokenMint);
-  //
-  //     const tokenAccounts = await this.solanaConnection.getTokenAccountsByOwner(
-  //       walletPubkey,
-  //       { mint: mintPubkey }
-  //     );
-  //
-  //     if (tokenAccounts.value.length === 0) {
-  //       return 0;
-  //     }
-  //
-  //     const balance = await this.solanaConnection.getTokenAccountBalance(
-  //       tokenAccounts.value[0].pubkey
-  //     );
-  //
-  //     return parseFloat(balance.value.uiAmount?.toString() || '0');
-  //   } catch (error) {
-  //     this.logger.error(`Error fetching Solana token balance: ${error.message}`);
-  //     return 0;
-  //   }
-  // }
+  private async getSolanaTokenBalance(
+    walletAddress: string,
+    tokenMint: string,
+  ): Promise<number> {
+    try {
+      const walletPubkey = new PublicKey(walletAddress);
+      const mintPubkey = new PublicKey(tokenMint);
+
+      const tokenAccounts =
+        await this.solanaConnection.getTokenAccountsByOwner(walletPubkey, {
+          mint: mintPubkey,
+        });
+
+      if (tokenAccounts.value.length === 0) {
+        return 0;
+      }
+
+      const balance = await this.solanaConnection.getTokenAccountBalance(
+        tokenAccounts.value[0].pubkey,
+      );
+
+      return parseFloat(balance.value.uiAmount?.toString() || '0');
+    } catch (error) {
+      this.logger.error(`Error fetching Solana token balance: ${error.message}`);
+      return 0;
+    }
+  }
 
   private async getEVMBalance(address: string, chain: string): Promise<string> {
     try {

@@ -27,4 +27,10 @@ export default () => ({
     cachePublicMaxAge: Number(process.env.PREVIEW_CACHE_PUBLIC_MAX_AGE || 300),
     cacheSMaxAge: Number(process.env.PREVIEW_CACHE_S_MAX_AGE || 86400),
   },
+  paj: {
+    apiKey: process.env.PAJ_API_KEY,
+    environment: process.env.PAJ_ENVIRONMENT || 'staging',
+    webhookUrl: process.env.PAJ_WEBHOOK_URL,
+    webhookSecret: process.env.PAJ_WEBHOOK_SECRET,
+  },
 });

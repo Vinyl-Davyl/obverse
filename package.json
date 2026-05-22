@@ -45,6 +45,7 @@
     "mongoose": "^9.0.2",
     "mongoose-lean-virtuals": "^2.1.0",
     "nanoid": "^5.1.6",
+    "paj_ramp": "^1.5.4",
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1",
     "reflect-metadata": "^0.2.2",
