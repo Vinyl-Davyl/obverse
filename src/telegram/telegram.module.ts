@@ -3,6 +3,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { TelegramService } from './telegram.service';
 import { TelegramController } from './telegram.controller';
 import { TelegramGateway } from './telegram.gateway';
+import { TelegramBotProfileService } from './telegram-bot-profile.service';
 import { HelpHandler } from './handlers/help.handler';
 import { ListLinksHandler } from './handlers/list-links.handler';
 import { ViewLinkHandler } from './handlers/view-link.handler';
@@ -43,6 +44,7 @@ import { PajiRampModule } from 'src/paj-ramp/paj-ramp.module';
   ],
   providers: [
     TelegramService,
+    TelegramBotProfileService,
     TelegramGateway,
     HelpHandler,
     ListLinksHandler,

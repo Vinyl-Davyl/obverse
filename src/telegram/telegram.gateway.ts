@@ -23,6 +23,7 @@ import { PajiRampSellHandler } from '../paj-ramp/handlers/sell.handler';
 import { PajiRampRateHandler } from '../paj-ramp/handlers/rate.handler';
 import { PajiRampService } from '../paj-ramp/paj-ramp.service';
 import { forwardRef } from '@nestjs/common';
+import { TelegramBotProfileService } from './telegram-bot-profile.service';
 
 @Injectable()
 export class TelegramGateway implements OnModuleInit, OnModuleDestroy {
@@ -47,6 +48,7 @@ export class TelegramGateway implements OnModuleInit, OnModuleDestroy {
     private pajRampSellHandler: PajiRampSellHandler,
     private pajRampRateHandler: PajiRampRateHandler,
     private pajRampService: PajiRampService,
+    private telegramBotProfileService: TelegramBotProfileService,
   ) {
     const token = this.configService.get<string>('TELEGRAM_BOT_TOKEN');
     this.logger.log(`Telegram Bot Token: ${token ? 'Loaded' : 'Not Loaded'}`);
@@ -60,6 +62,8 @@ export class TelegramGateway implements OnModuleInit, OnModuleDestroy {
 
   async onModuleInit() {
     try {
+      await this.telegramBotProfileService.syncEnglishProfile(this.bot);
+
       this.registerCommands();
       this.registerMessageHandlers();
 
