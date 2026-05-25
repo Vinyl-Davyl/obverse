@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
+import { InvoiceApplicationService } from 'src/messaging-core/invoice-application.service';
 import { MerchantService } from 'src/merchants/merchants.service';
-import { PaymentLinksService } from 'src/payment-links/payment-links.service';
 import { ConversationManager } from '../conversation/conversation.manager';
 import {
   getSupportedChains,
@@ -11,8 +11,8 @@ import {
 @Injectable()
 export class CreateLinkHandler {
   constructor(
+    private invoiceApplicationService: InvoiceApplicationService,
     private merchantsService: MerchantService,
-    private paymentLinksService: PaymentLinksService,
     private conversationManager: ConversationManager,
   ) { }
 
@@ -271,31 +271,18 @@ export class CreateLinkHandler {
 
     const { customFields, amount, token, description, chain } = state.data;
 
-    // Create payment link
-    const customFieldsFormatted = (customFields || []).map((name: string) => ({
-      fieldName: name,
-      fieldType: name.includes('email') ? 'email' : 'text',
-      required: true,
-    }));
-
-    const paymentLink = await this.paymentLinksService.createPaymentLink({
+    const { paymentLink, paymentUrl } =
+      await this.invoiceApplicationService.createInvoice({
       merchantId: state.merchantId.toString(),
       amount,
       token,
-      chain: chain || 'solana', // Include chain selection
+      chain: chain || 'solana',
       description,
-      customFields: customFieldsFormatted,
+      customFields,
       isReusable,
     });
 
     await this.conversationManager.clearState(ctx.from.id.toString());
-
-    const paymentBaseUrl = process.env.PAYMENT_URL
-      ? process.env.PAYMENT_URL.replace(/\/$/, '')
-      : process.env.APP_URL
-        ? `${process.env.APP_URL.replace(/\/$/, '')}/pay`
-        : 'https://pay.obverse.app';
-    const paymentUrl = `${paymentBaseUrl}/${paymentLink.linkId}`;
 
     const fieldsText =
       customFields?.length > 0

@@ -15,6 +15,8 @@ import { DashboardModule } from './dashboard/dashboard.module';
 import { ApiKeysModule } from './api-keys/api-keys.module';
 import { PreviewModule } from './preview/preview.module';
 import { ShareModule } from './share/share.module';
+import { WhatsAppModule } from './whatsapp/whatsapp.module';
+import { PajiRampModule } from './paj-ramp/paj-ramp.module';
 import configuration from './config/configuration';
 import leanVirtuals from 'mongoose-lean-virtuals';
 
@@ -54,6 +56,8 @@ const config = configuration();
     ApiKeysModule,
     PreviewModule,
     ShareModule,
+    WhatsAppModule,
+    PajiRampModule,
   ],
   controllers: [AppController],
   providers: [AppService],

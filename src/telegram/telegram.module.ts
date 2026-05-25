@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { TelegramService } from './telegram.service';
 import { TelegramController } from './telegram.controller';
@@ -19,20 +19,24 @@ import { PaymentLinksModule } from 'src/payment-links/payment-links.module';
 import { PaymentsModule } from 'src/payments/payments.module';
 import { TransactionsModule } from 'src/transactions/transactions.module';
 import { AuthModule } from 'src/auth/auth.module';
+import { MessagingCoreModule } from 'src/messaging-core/messaging-core.module';
 import { ConversationManager } from './conversation/conversation.manager';
 import {
   ConversationState,
   ConversationStateSchema,
 } from './schemas/conversation-state.schema';
 import { ConversationRepository } from './conversation.repository';
+import { PajiRampModule } from 'src/paj-ramp/paj-ramp.module';
 
 @Module({
   imports: [
-    MerchantsModule,
-    PaymentLinksModule,
-    PaymentsModule,
-    TransactionsModule,
-    AuthModule,
+    forwardRef(() => MerchantsModule),
+    forwardRef(() => PaymentLinksModule),
+    forwardRef(() => PaymentsModule),
+    forwardRef(() => TransactionsModule),
+    forwardRef(() => AuthModule),
+    forwardRef(() => PajiRampModule),
+    MessagingCoreModule,
     MongooseModule.forFeature([
       { name: ConversationState.name, schema: ConversationStateSchema },
     ]),
@@ -55,6 +59,6 @@ import { ConversationRepository } from './conversation.repository';
     ConversationRepository,
   ],
   controllers: [TelegramController],
-  exports: [ConversationRepository],
+  exports: [ConversationRepository, ConversationManager, TelegramGateway],
 })
-export class TelegramModule {}
+export class TelegramModule { }

@@ -1,14 +1,14 @@
 import { Injectable } from '@nestjs/common';
+import { InvoiceApplicationService } from 'src/messaging-core/invoice-application.service';
 import { Context } from 'telegraf';
 import type { InlineKeyboardButton } from 'telegraf/types';
 import { MerchantService } from 'src/merchants/merchants.service';
-import { PaymentLinksService } from 'src/payment-links/payment-links.service';
 
 @Injectable()
 export class ListLinksHandler {
   constructor(
+    private invoiceApplicationService: InvoiceApplicationService,
     private merchantsService: MerchantService,
-    private paymentLinksService: PaymentLinksService,
   ) {}
 
   async handle(ctx: Context) {
@@ -30,7 +30,7 @@ export class ListLinksHandler {
       return;
     }
 
-    const links = await this.paymentLinksService.findByMerchantId(
+    const links = await this.invoiceApplicationService.listMerchantInvoices(
       merchant._id.toString(),
       50,
     );

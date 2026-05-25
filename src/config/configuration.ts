@@ -9,6 +9,11 @@ export default () => ({
   PARA_SECRET_KEY: process.env.PARA_SECRET_KEY,
   APP_URL: process.env.APP_URL || 'https://www.obverse.cc',
   DASHBOARD_URL: process.env.DASHBOARD_URL,
+  whatsapp: {
+    verifyToken: process.env.WHATSAPP_VERIFY_TOKEN,
+    phoneNumberId: process.env.WHATSAPP_PHONE_NUMBER_ID,
+    kapsoApiKey: process.env.KAPSO_API_KEY,
+  },
   preview: {
     baseUrl: process.env.PREVIEW_BASE_URL || process.env.APP_URL,
     signingSecret: process.env.PREVIEW_SIGNING_SECRET,
@@ -21,5 +26,11 @@ export default () => ({
     onErrorMode: process.env.PREVIEW_ON_ERROR_MODE || 'fallback-image',
     cachePublicMaxAge: Number(process.env.PREVIEW_CACHE_PUBLIC_MAX_AGE || 300),
     cacheSMaxAge: Number(process.env.PREVIEW_CACHE_S_MAX_AGE || 86400),
+  },
+  paj: {
+    apiKey: process.env.PAJ_API_KEY,
+    environment: process.env.PAJ_ENVIRONMENT || 'staging',
+    webhookUrl: process.env.PAJ_WEBHOOK_URL,
+    webhookSecret: process.env.PAJ_WEBHOOK_SECRET,
   },
 });

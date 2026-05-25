@@ -18,6 +18,11 @@ import { SendHandler } from './handlers/send.handler';
 import { DashboardHandler } from './handlers/dashboard.handler';
 import { ConversationManager } from './conversation/conversation.manager';
 import { ConfigService } from '@nestjs/config';
+import { PajiRampBuyHandler } from '../paj-ramp/handlers/buy.handler';
+import { PajiRampSellHandler } from '../paj-ramp/handlers/sell.handler';
+import { PajiRampRateHandler } from '../paj-ramp/handlers/rate.handler';
+import { PajiRampService } from '../paj-ramp/paj-ramp.service';
+import { forwardRef } from '@nestjs/common';
 
 @Injectable()
 export class TelegramGateway implements OnModuleInit, OnModuleDestroy {
@@ -38,6 +43,10 @@ export class TelegramGateway implements OnModuleInit, OnModuleDestroy {
     private sendHandler: SendHandler,
     private dashboardHandler: DashboardHandler,
     private conversationManager: ConversationManager,
+    private pajRampBuyHandler: PajiRampBuyHandler,
+    private pajRampSellHandler: PajiRampSellHandler,
+    private pajRampRateHandler: PajiRampRateHandler,
+    private pajRampService: PajiRampService,
   ) {
     const token = this.configService.get<string>('TELEGRAM_BOT_TOKEN');
     this.logger.log(`Telegram Bot Token: ${token ? 'Loaded' : 'Not Loaded'}`);
@@ -197,6 +206,85 @@ export class TelegramGateway implements OnModuleInit, OnModuleDestroy {
         await ctx.reply('❌ Sorry, something went wrong. Please try again.');
       }
     });
+
+    this.bot.command('buy', async (ctx) => {
+      try {
+        await this.pajRampBuyHandler.handle(ctx);
+      } catch (error) {
+        this.logger.error(
+          `Error in /buy command: ${error.message}`,
+          error.stack,
+        );
+        await ctx.reply('❌ Sorry, something went wrong. Please try again.');
+      }
+    });
+
+    this.bot.command('sell', async (ctx) => {
+      try {
+        await this.pajRampSellHandler.handle(ctx);
+      } catch (error) {
+        this.logger.error(
+          `Error in /sell command: ${error.message}`,
+          error.stack,
+        );
+        await ctx.reply('❌ Sorry, something went wrong. Please try again.');
+      }
+    });
+
+    this.bot.command('rate', async (ctx) => {
+      try {
+        const args = ctx.message.text
+          .replace('/rate', '')
+          .trim()
+          .split(/\s+/);
+        await this.pajRampRateHandler.handle(ctx);
+      } catch (error) {
+        this.logger.error(
+          `Error in /rate command: ${error.message}`,
+          error.stack,
+        );
+        await ctx.reply('❌ Sorry, something went wrong. Please try again.');
+      }
+    });
+
+    this.bot.command('banks', async (ctx) => {
+      try {
+        const telegramId = ctx.from.id.toString();
+        if (!this.pajRampService.hasValidSession(telegramId)) {
+          await ctx.reply(
+            '🏦 *Supported Banks*\\n\\n' +
+            'To see available banks, I need to verify your session first.\\n\\n' +
+            'Send your email address:',
+          );
+          await this.conversationManager.setState(
+            telegramId,
+            new (require('mongoose').Types.ObjectId)(),
+            'pajramp_list_banks',
+            'asking_email',
+            {},
+          );
+          return;
+        }
+        const banks = await this.pajRampService.listBanks(telegramId);
+        const bankList = banks
+          .slice(0, 15)
+          .map((b, i) => `${i + 1}. *${b.name}* (${b.code})`)
+          .join('\n');
+        await ctx.reply(
+          '🏦 *Supported Nigerian Banks*\\n\\n' +
+            bankList + '\\n\\n' +
+            (banks.length > 15 ? `...and ${banks.length - 15} more.` : '') + '\\n\\n' +
+            'Use /sell to start selling USDC.',
+          { parse_mode: 'Markdown' },
+        );
+      } catch (error) {
+        this.logger.error(
+          `Error in /banks command: ${error.message}`,
+          error.stack,
+        );
+        await ctx.reply(`❌ ${error.message}`);
+      }
+    });
   }
 
   private registerMessageHandlers() {
@@ -245,6 +333,70 @@ export class TelegramGateway implements OnModuleInit, OnModuleDestroy {
               await this.sendHandler.handleRecipientInput(ctx, state);
             } else if (state.currentStep === 'awaiting_amount') {
               await this.sendHandler.handleAmountInput(ctx, state);
+            }
+            break;
+
+          // ─── PAJ Ramp onramp flow ───────────────────────────────
+          case 'pajramp_buy':
+            if (state.currentStep === 'asking_email') {
+              await this.pajRampBuyHandler.handleEmailInput(ctx, state);
+            } else if (state.currentStep === 'asking_otp') {
+              await this.pajRampBuyHandler.handleOtpInput(ctx, state);
+            } else if (state.currentStep === 'asking_amount') {
+              await this.pajRampBuyHandler.handleAmountInput(ctx, state);
+            } else if (state.currentStep === 'confirming') {
+              await this.pajRampBuyHandler.handleConfirmation(ctx, state);
+            }
+            break;
+
+          // ─── PAJ Ramp offramp flow ───────────────────────────────
+          case 'pajramp_sell':
+            if (state.currentStep === 'asking_email') {
+              await this.pajRampSellHandler.handleEmailInput(ctx, state);
+            } else if (state.currentStep === 'asking_otp') {
+              await this.pajRampSellHandler.handleOtpInput(ctx, state);
+            } else if (state.currentStep === 'asking_amount') {
+              await this.pajRampSellHandler.handleAmountInput(ctx, state);
+            } else if (state.currentStep === 'asking_bank') {
+              await this.pajRampSellHandler.handleBankInput(ctx, state);
+            } else if (state.currentStep === 'asking_account') {
+              await this.pajRampSellHandler.handleAccountInput(ctx, state);
+            }
+            break;
+
+          // ─── PAJ Ramp rate flow ───────────────────────────────
+          case 'pajramp_rate':
+            if (state.currentStep === 'asking_email') {
+              await this.pajRampRateHandler.handleEmailInput(ctx, state);
+            } else if (state.currentStep === 'asking_otp') {
+              await this.pajRampRateHandler.handleOtpInput(ctx, state);
+            }
+            break;
+
+          // ─── PAJ Ramp /banks email step ──────────────────────────
+          case 'pajramp_list_banks':
+            if (state.currentStep === 'asking_email') {
+              await this.pajRampBuyHandler.handleEmailInput(ctx, state).then(
+                async () => {
+                  const tid = ctx.from.id.toString();
+                  await this.conversationManager.updateState(tid, 'asking_otp', state.data);
+                },
+              );
+            } else if (state.currentStep === 'asking_otp') {
+              await this.pajRampBuyHandler.handleOtpInput(ctx, state).then(
+                async () => {
+                  const tid = ctx.from.id.toString();
+                  const banks = await this.pajRampService.listBanks(tid);
+                  const bankList = banks.slice(0, 15)
+                    .map((b, i) => `${i + 1}. *${b.name}* (${b.code})`)
+                    .join('\n');
+                  await ctx.reply(
+                    '🏦 *Supported Banks*\\n\\n' + bankList + '\\n\\nUse /sell to start selling USDC.',
+                    { parse_mode: 'Markdown' },
+                  );
+                  await this.conversationManager.clearState(tid);
+                },
+              );
             }
             break;
         }
